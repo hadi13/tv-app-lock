@@ -1,0 +1,11 @@
+tools/
+build/
+keystore/
+*.p12
+*.jks
+*.keystore
+windows/adb/
+windows/*.png
+windows/*.jpg
+windows/diagnose.txt
+dist/TVLock.apk

@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f172a">
+<title>تحكم الشاشة</title>
+<style>
+:root{color-scheme:dark;--bg:#0f172a;--card:#1e293b;--line:#334155;--txt:#f1f5f9;--mut:#94a3b8;--acc:#38bdf8;--ok:#4ade80;--bad:#f87171;--warn:#fbbf24}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;font-size:16px}
+main{max-width:760px;margin:auto;padding:14px 14px 96px}
+h1{font-size:21px;margin:4px 0 12px}h2{font-size:17px;margin:18px 0 8px;color:var(--mut);font-weight:600}
+button{font:inherit;border:0;border-radius:12px;padding:11px 14px;background:var(--acc);color:#0f172a;font-weight:600;cursor:pointer}
+button.sec{background:var(--card);color:var(--txt);border:1px solid var(--line)}
+button.bad{background:var(--bad);color:#1f0a0a}button.sm{padding:7px 10px;font-size:14px;border-radius:10px}
+button:disabled{opacity:.5}
+input,select{font:inherit;color:var(--txt);background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 10px}
+.card{background:var(--card);border-radius:14px;padding:12px 14px;margin:8px 0}
+.row{display:flex;align-items:center;gap:10px}.grow{flex:1;min-width:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.mut{color:var(--mut);font-size:14px}.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+.screen{position:relative;background:#000;border-radius:14px;overflow:hidden;aspect-ratio:16/9}
+.screen img{width:100%;height:100%;object-fit:contain;display:block}
+.note{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:#cbd5e1;background:rgba(15,23,42,.88)}
+[hidden]{display:none!important}
+.alert{background:#7c2d12;border-radius:14px;padding:12px 14px;margin:8px 0}
+.live{font-size:13px;color:var(--ok)}.live.off{color:var(--mut)}
+.app img{width:40px;height:40px;border-radius:10px;background:#0b1222;flex:none}
+.name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar{height:6px;background:#0b1222;border-radius:4px;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:var(--acc)}
+.bar i.over{background:var(--bad)}
+.sw{position:relative;width:50px;height:30px;flex:none}.sw input{opacity:0;width:0;height:0}
+.sw span{position:absolute;inset:0;background:#475569;border-radius:30px;transition:.2s}
+.sw span:before{content:"";position:absolute;width:24px;height:24px;top:3px;right:3px;background:#fff;border-radius:50%;transition:.2s}
+.sw input:checked+span{background:var(--acc)}.sw input:checked+span:before{transform:translateX(-20px)}
+nav{position:fixed;bottom:0;inset-inline:0;background:#0b1222;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+nav button{background:none;color:var(--mut);padding:6px 4px;font-size:12px;font-weight:500;display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
+nav button b{font-size:20px}nav button.on{color:var(--acc)}
+.badge{background:var(--bad);color:#fff;border-radius:10px;font-size:11px;padding:0 6px;margin-inline-start:4px}
+.toast{position:fixed;top:12px;inset-inline:12px;max-width:520px;margin:auto;background:#7c2d12;border-radius:12px;padding:12px 14px;z-index:9;box-shadow:0 8px 24px #0008}
+.login{max-width:360px;margin:16vh auto 0;text-align:center}
+.login input{width:100%;font-size:28px;text-align:center;letter-spacing:8px;margin:12px 0}
+.login button{width:100%}
+.days{display:flex;align-items:flex-end;gap:6px;height:120px;margin-top:8px}
+.days div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:11px;color:var(--mut);cursor:pointer}
+.days div i{display:block;width:100%;background:var(--acc);border-radius:6px 6px 0 0;min-height:2px}
+.days div.sel i{background:var(--warn)}
+.ev{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}.ev:last-child{border:0}
+code{background:#0b1222;padding:2px 6px;border-radius:6px;direction:ltr;display:inline-block}
+</style>
+</head>
+<body>
+<div id="toast" class="toast" hidden></div>
+
+<section id="login" hidden>
+  <main class="login">
+    <h1>🔒 تحكم شاشة التلفزيون</h1>
+    <p class="mut">اكتب الرقم السري حق الشاشة</p>
+    <input id="pin" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="8" autocomplete="current-password" placeholder="••••">
+    <button onclick="login()">دخول</button>
+    <p id="loginErr" class="bad"></p>
+  </main>
+</section>
+
+<section id="app" hidden>
+<main>
+  <!-- Screen -->
+  <div id="t-screen">
+    <div class="row"><h1 class="grow">📺 الشاشة الحين</h1><span id="live" class="live">● مباشر</span></div>
+    <div class="screen"><img id="img" alt=""><div id="note" class="note" hidden></div></div>
+    <div id="lockAlert" class="alert" hidden>
+      🔒 شاشة القفل ظاهرة على <b id="laName"></b> <span id="laWhy" class="mut"></span>
+      <div class="grid" style="margin-top:8px">
+        <button onclick="act('open15')">افتحه ربع ساعة</button>
+        <button onclick="act('open1')">افتحه ساعة</button>
+        <button class="sec" onclick="act('openonce')">هذي المرة بس</button>
+      </div>
+    </div>
+    <div class="card"><div class="name" id="curName">…</div><div class="mut" id="curSub"></div>
+      <div id="chan" hidden style="margin-top:8px"><div style="font-size:20px">📺 <b id="chanName"></b></div><div class="mut" id="chanProg"></div></div></div>
+    <div class="grid">
+      <button class="bad" onclick="act('lockcurrent')">🔒 اقفل التطبيق الحالي</button>
+      <button class="bad" onclick="act('lockall')">🔒 اقفل كل شي الحين</button>
+      <button class="sec" onclick="act('home')">🏠 الرئيسية</button>
+      <button class="sec" onclick="act('back')">↩ رجوع</button>
+      <button class="sec" id="pauseBtn" onclick="togglePause()">⏸ إيقاف البث</button>
+    </div>
+  </div>
+
+  <!-- Apps -->
+  <div id="t-apps" hidden>
+    <h1>📱 التطبيقات</h1>
+    <p class="mut">🔒 = يطلب الرقم السري دائماً. ⏱ الحد اليومي: إذا خلص وقته يتقفل لحاله لين بكرة.</p>
+    <div class="grid"><button class="sec sm" onclick="lockSet('all')">اقفل الكل بالرقم</button><button class="sec sm" onclick="lockSet('none')">شيل القفل عن الكل</button></div>
+    <div id="appList"></div>
+  </div>
+
+  <!-- Bedtime -->
+  <div id="t-bed" hidden>
+    <h1>🌙 وقت النوم</h1>
+    <div class="card">
+      <div class="row"><div class="grow"><div class="name">تشغيل وقت النوم</div><div class="mut">كل التطبيقات تتقفل في هالوقت، وما تنفتح إلا بالرقم السري</div></div>
+        <label class="sw"><input type="checkbox" id="bedOn"><span></span></label></div>
+    </div>
+    <div class="card">
+      <div class="row"><span class="grow">يبدأ الساعة</span><input type="time" id="bedStart"></div>
+      <div class="row" style="margin-top:10px"><span class="grow">ينتهي الساعة</span><input type="time" id="bedEnd"></div>
+    </div>
+    <button onclick="saveBed()" style="width:100%">حفظ</button>
+    <p id="bedState" class="mut" style="text-align:center"></p>
+    <p class="mut">قبل وقت النوم بخمس دقايق يطلع تنبيه على الشاشة للعيال.</p>
+  </div>
+
+  <!-- Usage -->
+  <div id="t-usage" hidden>
+    <h1>📊 سجل الاستخدام</h1>
+    <div class="card"><div class="mut">آخر ٧ أيام (اضغط على يوم)</div><div id="days" class="days"></div></div>
+    <h2 id="dayTitle"></h2>
+    <div id="dayApps"></div>
+  </div>
+
+  <!-- Alerts -->
+  <div id="t-alerts" hidden>
+    <h1>🔔 التنبيهات</h1>
+    <div class="card">
+      <div class="row"><div class="grow"><div class="name">إشعارات على جوالك</div><div class="mut">توصلك حتى لو الصفحة مسكّرة، عن طريق تطبيق ntfy المجاني</div></div>
+        <label class="sw"><input type="checkbox" id="ntfyOn" onchange="saveNtfy()"><span></span></label></div>
+      <div id="ntfyHelp" class="mut" style="margin-top:10px;line-height:1.8">
+        ١. نزّل تطبيق <b>ntfy</b> من App Store أو Google Play.<br>
+        ٢. اضغط + واشترك في هذا الاسم: <code id="topic"></code> <button class="sec sm" onclick="copyTopic()">نسخ</button><br>
+        ٣. اضغط زر التجربة تحت وتأكد إن الإشعار وصلك.
+      </div>
+      <button class="sec sm" style="margin-top:8px" onclick="saveNtfy(true)">إرسال تنبيه تجريبي</button>
+    </div>
+    <div class="card" id="evList"></div>
+  </div>
+
+  <!-- Settings -->
+  <div id="t-set" hidden>
+    <h1>⚙️ الإعدادات</h1>
+    <div class="card" id="svcState"></div>
+    <div class="card">
+      <div class="name">تغيير الرقم السري</div>
+      <input id="oldPin" type="password" inputmode="numeric" maxlength="8" placeholder="الرقم الحالي" style="width:100%;margin-top:8px">
+      <input id="newPin" type="password" inputmode="numeric" maxlength="8" placeholder="الرقم الجديد (٤ إلى ٨ أرقام)" style="width:100%;margin-top:8px">
+      <input id="newPin2" type="password" inputmode="numeric" maxlength="8" placeholder="أعد كتابة الرقم الجديد" style="width:100%;margin-top:8px">
+      <button style="width:100%;margin-top:8px" onclick="changePin()">تغيير</button>
+      <p id="pinMsg"></p>
+    </div>
+    <button class="sec" style="width:100%" onclick="logout()">تسجيل خروج من هالجوال</button>
+  </div>
+</main>
+
+<nav>
+  <button data-t="screen" class="on"><b>📺</b>الشاشة</button>
+  <button data-t="apps"><b>📱</b>التطبيقات</button>
+  <button data-t="bed"><b>🌙</b>النوم</button>
+  <button data-t="usage"><b>📊</b>الاستخدام</button>
+  <button data-t="alerts"><b>🔔</b><span>التنبيهات<span id="badge" class="badge" hidden></span></span></button>
+  <button data-t="set"><b>⚙️</b>الإعدادات</button>
+</nav>
+</section>
+
+<script>
+const $=id=>document.getElementById(id);
+let S=null,tab='screen',paused=false,shotTimer=null,lastSeen=+(localStorage.getItem('lastSeen')||0),firstState=true,notified=0,usage=null,selDay=0;
+const LIMITS=[[0,'بدون حد'],[15,'ربع ساعة'],[30,'نص ساعة'],[45,'٤٥ دقيقة'],[60,'ساعة'],[90,'ساعة ونص'],[120,'ساعتين'],[180,'٣ ساعات'],[240,'٤ ساعات']];
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function fmtMin(m){m=Math.round(m);if(m<1)return'أقل من دقيقة';const h=Math.floor(m/60),r=m%60;const hs=h==1?'ساعة':h==2?'ساعتين':h+' ساعات';const ms=r==1?'دقيقة':r==2?'دقيقتين':r+' دقيقة';return h?(r?hs+' و'+ms:hs):ms}
+function hm(min){return String(Math.floor(min/60)).padStart(2,'0')+':'+String(min%60).padStart(2,'0')}
+function toMin(v){const [h,m]=v.split(':').map(Number);return h*60+m}
+function t12(min){const h=Math.floor(min/60),m=min%60;return((h%12)||12)+':'+String(m).padStart(2,'0')+(h<12?' ص':' م')}
+function toast(t){const e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(e._t);e._t=setTimeout(()=>e.hidden=true,6000)}
+
+async function api(path,body){
+  const r=await fetch(path,body===undefined?{}:{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(r.status==401&&path!='/api/login'){showLogin();throw new Error('auth')}
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.error||('خطأ '+r.status));
+  return j;
+}
+function showLogin(){$('app').hidden=true;$('login').hidden=false;$('pin').focus()}
+async function login(){
+  $('loginErr').textContent='';
+  try{await api('/api/login',{pin:$('pin').value});$('pin').value='';start()}
+  catch(e){$('loginErr').textContent=e.message;$('pin').value=''}
+}
+$('pin').addEventListener('keydown',e=>{if(e.key=='Enter')login()});
+async function logout(){await fetch('/api/logout');location.reload()}
+
+// Tabs
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.t));
+function go(t){tab=t;document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t==t));
+  ['screen','apps','bed','usage','alerts','set'].forEach(x=>$('t-'+x).hidden=x!=t);
+  if(t=='usage')loadUsage();if(t=='alerts')loadEvents();if(t=='bed')fillBed();render();scrollTo(0,0)}
+
+// Live screen
+async function shot(){
+  clearTimeout(shotTimer);
+  if(tab=='screen'&&!paused&&!document.hidden){
+    try{const r=await fetch('/shot.jpg?'+Date.now());
+      if(r.status==401){showLogin();return}
+      if(r.ok){const b=await r.blob(),u=URL.createObjectURL(b),o=$('img').src;$('img').src=u;if(o.startsWith('blob:'))URL.revokeObjectURL(o);$('note').hidden=true}
+      else{$('note').textContent=await r.text();$('note').hidden=false}
+    }catch(e){$('note').textContent='ما قدرت أوصل للشاشة. تأكد إن جوالك على نفس شبكة البيت.';$('note').hidden=false}
+  }
+  shotTimer=setTimeout(shot,1000);
+}
+function togglePause(){paused=!paused;$('pauseBtn').textContent=paused?'▶ تشغيل البث':'⏸ إيقاف البث';$('live').textContent=paused?'● متوقف':'● مباشر';$('live').className=paused?'live off':'live'}
+
+async function act(a){try{S=await api('/api/action',{a});render()}catch(e){if(e.message!='auth')toast(e.message)}}
+
+// State
+async function refresh(){
+  try{S=await api('/api/state');render();
+    if(firstState)notified=S.lastEvent;
+    if(S.lastEvent>notified){
+      const ev=await api('/api/events');const n=ev.events.filter(x=>x.id>notified);
+      if(n.length){toast(n[0].icon+' '+n[0].text);if(navigator.vibrate)navigator.vibrate([200,100,200])}
+      notified=S.lastEvent;if(tab=='alerts')loadEvents();
+    }
+    if(S.lastEvent>lastSeen&&tab!='alerts'){$('badge').textContent=Math.min(99,S.lastEvent-lastSeen);$('badge').hidden=false}
+    firstState=false;
+  }catch(e){}
+}
+function render(){
+  if(!S)return;
+  const c=S.cur;
+  $('curName').textContent=c.label?'▶ '+c.label:'—';
+  let sub=c.lockable?'':'الشاشة الرئيسية';
+  if(c.lockable){sub=c.open?'🔓 '+c.remain:'';if(c.left)sub+=(sub?' · ':'')+'⏳ ينقفل بعد '+c.left;if(!sub)sub='بدون قيود الحين'}
+  $('curSub').textContent=sub;
+  $('chan').hidden=!c.live;
+  $('chanName').textContent=c.channel||'غيّر القناة أو اضغط زر المعلومات في الريموت عشان يبان اسمها';
+  $('chanProg').textContent=c.program||'';
+  $('lockAlert').hidden=!S.lockScreen;$('laName').textContent=S.lockLabel;$('laWhy').textContent=S.lockReason;
+  if(tab=='apps')renderApps();
+  if(tab=='set')renderSet();
+  if(tab=='alerts')renderNtfy();
+  $('bedState').innerHTML=S.bed.on?(S.bed.active?'<span class="warn">🌙 وقت النوم شغال الحين</span>':'وقت النوم من '+t12(S.bed.start)+' إلى '+t12(S.bed.end)):'وقت النوم مطفي';
+}
+function renderApps(){
+  const L=$('appList');
+  const open=document.activeElement&&document.activeElement.tagName=='SELECT';if(open)return;
+  L.innerHTML=S.apps.map(a=>{
+    const pct=a.limit?Math.min(100,a.used/a.limit*100):0;
+    let st=[];if(a.open)st.push('<span class="ok">🔓 '+esc(a.remain)+'</span>');
+    if(a.limit)st.push((a.used>=a.limit?'<span class="bad">':'<span>')+'⏱ '+fmtMin(a.used)+' من '+fmtMin(a.limit)+'</span>');
+    else if(a.used)st.push('اليوم '+fmtMin(a.used));
+    if(a.blocked&&!a.locked)st.push('<span class="warn">مقفل الحين</span>');
+    return `<div class="card app"><div class="row"><img src="/icon?pkg=${encodeURIComponent(a.pkg)}" loading="lazy" alt="">
+      <div class="grow"><div class="name">${esc(a.label)}</div><div class="mut">${st.join(' · ')||'&nbsp;'}</div></div>
+      <label class="sw" title="قفل بالرقم السري"><input type="checkbox" ${a.locked?'checked':''} onchange="setApp('${a.pkg}',{locked:this.checked})"><span></span></label></div>
+      ${a.limit?`<div class="bar"><i class="${a.used>=a.limit?'over':''}" style="width:${pct}%"></i></div>`:''}
+      <div class="row" style="margin-top:10px;flex-wrap:wrap">
+        <select onchange="setApp('${a.pkg}',{limit:+this.value})">${LIMITS.map(([v,t])=>`<option value="${v}" ${v==a.limit?'selected':''}>⏱ ${t}</option>`).join('')}</select>
+        <span class="grow"></span>
+        ${a.open?`<button class="bad sm" onclick="setApp('${a.pkg}',{open:0})">اقفله الحين</button>`:`<button class="sec sm" onclick="setApp('${a.pkg}',{open:60})">افتحه ساعة</button>`}
+      </div></div>`}).join('');
+}
+async function setApp(pkg,o){try{S=await api('/api/app',Object.assign({pkg},o));render()}catch(e){toast(e.message)}}
+async function lockSet(w){if(w=='all'&&!confirm('تقفل كل التطبيقات بالرقم السري؟'))return;try{S=await api('/api/lockset',w=='all'?{all:true}:{none:true});render()}catch(e){toast(e.message)}}
+
+function fillBed(){if(!S)return;$('bedOn').checked=S.bed.on;$('bedStart').value=hm(S.bed.start);$('bedEnd').value=hm(S.bed.end)}
+async function saveBed(){try{S=await api('/api/bed',{on:$('bedOn').checked,start:toMin($('bedStart').value||'21:00'),end:toMin($('bedEnd').value||'07:00')});render();toast('✅ انحفظ وقت النوم')}catch(e){toast(e.message)}}
+
+async function loadUsage(){try{usage=await api('/api/usage');renderUsage()}catch(e){}}
+function renderUsage(){
+  const d=usage.days,max=Math.max(60,...d.map(x=>x.total));
+  const names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  $('days').innerHTML=d.slice().reverse().map((x,i)=>{const idx=d.length-1-i;const dt=new Date(+x.date.slice(0,4),+x.date.slice(4,6)-1,+x.date.slice(6));
+    return `<div class="${idx==selDay?'sel':''}" onclick="selDay=${idx};renderUsage()"><span>${x.total?fmtMin(x.total).replace(' و','<br>'):''}</span><i style="height:${x.total/max*80}%"></i>${idx==0?'اليوم':names[dt.getDay()]}</div>`}).join('');
+  const day=d[selDay];
+  $('dayTitle').textContent=(selDay==0?'اليوم':'يوم '+day.date.slice(6)+'/'+day.date.slice(4,6))+' — المجموع '+fmtMin(day.total);
+  const top=Math.max(1,...day.apps.map(a=>a.min));
+  $('dayApps').innerHTML=day.apps.length?day.apps.map(a=>`<div class="card app"><div class="row"><img src="/icon?pkg=${encodeURIComponent(a.pkg)}" alt=""><div class="grow"><div class="row"><span class="name grow">${esc(a.label)}</span><span class="mut">${fmtMin(a.min)}</span></div><div class="bar"><i style="width:${a.min/top*100}%"></i></div></div></div></div>`).join(''):'<p class="mut">ما فيه استخدام مسجّل.</p>';
+}
+
+async function loadEvents(){
+  try{const r=await api('/api/events');
+    $('evList').innerHTML=r.events.length?r.events.map(e=>{const d=new Date(e.ts);return `<div class="ev"><span style="font-size:22px">${esc(e.icon)}</span><div class="grow"><div>${esc(e.text)}</div><div class="mut">${d.toLocaleDateString('ar-SA',{weekday:'long'})} ${d.toLocaleTimeString('ar-SA',{hour:'numeric',minute:'2-digit'})}</div></div></div>`}).join(''):'<p class="mut">ما فيه تنبيهات للحين.</p>';
+    if(S){lastSeen=S.lastEvent;localStorage.setItem('lastSeen',lastSeen);$('badge').hidden=true}
+  }catch(e){}
+}
+function renderNtfy(){$('ntfyOn').checked=S.ntfy.on;$('topic').textContent=S.ntfy.topic}
+async function saveNtfy(test){try{S=await api('/api/ntfy',{on:$('ntfyOn').checked||!!test,test:!!test});render();if(test)toast('انرسل. إذا ما وصلك تأكد إنك مشترك بنفس الاسم.')}catch(e){toast(e.message)}}
+function copyTopic(){const t=S.ntfy.topic;if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('✅ انتسخ'),()=>prompt('انسخ الاسم:',t));else prompt('انسخ الاسم:',t)}
+
+function renderSet(){$('svcState').innerHTML=S.serviceOn?'<span class="ok">✅ خدمة القفل شغالة على الشاشة</span>':'<span class="bad">⚠️ خدمة القفل مطفية على الشاشة! افتح تطبيق «قفل التطبيقات» على الشاشة وفعّلها.</span>'}
+async function changePin(){
+  const m=$('pinMsg');m.className='';
+  if($('newPin').value!=$('newPin2').value){m.className='bad';m.textContent='الرقم الجديد مو متطابق';return}
+  try{await api('/api/pin',{old:$('oldPin').value,new:$('newPin').value});m.className='ok';m.textContent='✅ تغيّر الرقم السري';['oldPin','newPin','newPin2'].forEach(x=>$(x).value='')}
+  catch(e){m.className='bad';m.textContent=e.message}
+}
+
+let started=false;
+async function start(){
+  try{S=await api('/api/state')}catch(e){return}
+  $('login').hidden=true;$('app').hidden=false;
+  if(!started){started=true;shot();setInterval(refresh,3000);document.addEventListener('visibilitychange',()=>{if(!document.hidden){shot();refresh()}})}
+  render();refresh();
+}
+start();
+</script>
+</body>
+</html>

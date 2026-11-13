@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="service_desc">تراقب التطبيق المفتوح وتطلب الرقم السري قبل تشغيل أي تطبيق مقفل.</string>
+</resources>
