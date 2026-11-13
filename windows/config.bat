@@ -1,7 +1,7 @@
 @echo off
 rem ===== Edit these two lines only / عدّل هالسطرين فقط =====
 rem TV address on your home network / عنوان الشاشة في شبكة البيت (من إعدادات الشاشة: الشبكة والإنترنت)
-set TV_IP=192.168.0.107
+set TV_IP=192.168.1.100
 rem Path to adb (leave as is if Android Studio is installed) / مسار adb. إذا مثبّت Android Studio خله مثل ما هو، أو اكتب المسار الكامل لـ adb.exe
 set ADB=adb
 if exist "%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe" set ADB="%LOCALAPPDATA%\Android\Sdk\platform-tools\adb.exe"
