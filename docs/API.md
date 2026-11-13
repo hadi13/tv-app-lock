@@ -1,28 +1,28 @@
-<div dir="rtl">
+<p><b>English</b> · <a href="API.ar.md">العربية</a></p>
 
-# واجهة لوحة الجوال (HTTP API)
+# Phone panel HTTP API
 
-السيرفر داخل الشاشة على المنفذ `8787`. كل الردود JSON إلا الصور. الطلبات `POST` جسمها JSON.
+The server runs inside the TV on port `8787`. All responses are JSON except images. `POST` bodies are JSON.
 
-## الدخول
+## Sign in
 
-| الطلب | الوصف |
+| Request | Description |
 |---|---|
-| `POST /api/login` `{"pin":"1234"}` | يرجّع كوكي `t` (سنة). ٥ أخطاء ← `429` لمدة دقيقة. |
-| `GET /api/logout` | يمسح الكوكي. |
+| `POST /api/login` `{"pin":"1234"}` | Returns cookie `t` (1 year). 5 failures → `429` for a minute. |
+| `GET /api/logout` | Clears the cookie. |
 
-كل اللي تحت يحتاج الكوكي، وإلا يرجّع `401`.
+Everything below needs the cookie, otherwise `401`.
 
-## القراءة
+## Read
 
-| الطلب | الوصف |
+| Request | Description |
 |---|---|
-| `GET /` | صفحة اللوحة (`assets/panel.html`). |
-| `GET /api/state` | الحالة الكاملة (تحت). |
-| `GET /api/events` | `{"events":[{id,ts,icon,text}]}` أحدث ٨٠. |
-| `GET /api/usage` | `{"days":[{date:"yyyyMMdd",total,apps:[{pkg,label,min}]}]}` آخر ٧ أيام، اليوم أولاً. |
-| `GET /shot.jpg` | لقطة الشاشة الحين. `503` مع نص السبب إذا ما تنصوّر. |
-| `GET /icon?pkg=...` | أيقونة التطبيق PNG. |
+| `GET /` | The panel page (`assets/panel.html`). |
+| `GET /api/state` | Full state (below). |
+| `GET /api/events` | `{"events":[{id,ts,icon,text}]}` newest 80. |
+| `GET /api/usage` | `{"days":[{date:"yyyyMMdd",total,apps:[{pkg,label,min}]}]}` last 7 days, today first. |
+| `GET /shot.jpg` | Current screenshot. `503` with a text reason if it can't be captured. |
+| `GET /icon?pkg=...` | App icon PNG. |
 
 ### `/api/state`
 
@@ -41,24 +41,24 @@
 }
 ```
 
-## التحكم
+Human-readable strings (`remain`, `left`, `lockReason`) are in Arabic.
 
-| الطلب | الوصف |
+## Control
+
+| Request | Description |
 |---|---|
-| `POST /api/action` `{"a":"..."}` | `lockcurrent`، `lockall`، `home`، `back`، `open15`، `open1`، `openonce` (الثلاثة الأخيرة تفتح التطبيق اللي عليه شاشة القفل الحين). |
-| `POST /api/app` | `{"pkg":"...", "locked":true, "limit":60, "open":60}`. كل حقل اختياري. `open`: دقايق، `-1` مفتوح دائماً، `0` اقفله الحين. |
-| `POST /api/lockset` | `{"all":true}` اقفل الكل بالرقم، أو `{"none":true}` شيل القفل عن الكل. |
-| `POST /api/bed` | `{"on":true,"start":1260,"end":420}` بالدقايق من منتصف الليل. |
+| `POST /api/action` `{"a":"..."}` | `lockcurrent`, `lockall`, `home`, `back`, `open15`, `open1`, `openonce` (the last three open the app currently on the lock screen). |
+| `POST /api/app` | `{"pkg":"...", "locked":true, "limit":60, "open":60}`, every field optional. `open`: minutes, `-1` always open, `0` lock now. |
+| `POST /api/lockset` | `{"all":true}` PIN-lock everything, or `{"none":true}` remove all PIN locks. |
+| `POST /api/bed` | `{"on":true,"start":1260,"end":420}` minutes after midnight. |
 | `POST /api/ntfy` | `{"on":true,"topic":"my-topic","test":true}` |
-| `POST /api/pin` | `{"old":"1234","new":"5678"}` يرجّع كوكي جديد. |
+| `POST /api/pin` | `{"old":"1234","new":"5678"}` returns a new cookie. |
 
-## التشخيص (من داخل الشاشة بس)
+## Diagnostics (from the TV only)
 
-يفتح فقط إذا الطلب جاي من `127.0.0.1` (يعني عن طريق `adb forward tcp:18787 tcp:8787` من الكمبيوتر):
+Only answered when the request comes from `127.0.0.1` (i.e. through `adb forward tcp:18787 tcp:8787` from your computer):
 
-| الطلب | الوصف |
+| Request | Description |
 |---|---|
-| `GET /debug/info` | معلومات التصوير، التطبيق الحالي، القناة، والنصوص الخام من شاشة القنوات. |
-| `GET /debug/shot.jpg` | لقطة بدون رقم سري. |
-
-</div>
+| `GET /debug/info` | Capture info, current app, channel, and raw text from the channels screen. |
+| `GET /debug/shot.jpg` | Screenshot without the PIN. |

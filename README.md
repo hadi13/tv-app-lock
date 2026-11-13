@@ -1,119 +1,121 @@
-<div dir="rtl">
+<p align="center"><b>English</b> · <a href="README.ar.md">العربية</a></p>
 
-# 🔒 قفل التطبيقات لشاشات Google TV
+# 🔒 TV App Lock for Google TV
 
-تطبيق لشاشات **Android TV / Google TV** يقفل التطبيقات برقم سري، ويحدد وقت اللعب للعيال، ويعطيك **لوحة تحكم كاملة من جوالك** على شبكة البيت، وفيها بث مباشر للشاشة.
+An app for **Android TV / Google TV** that locks apps behind a PIN, limits kids' screen time, and gives you a **full control panel on your phone** over your home Wi-Fi, including a live view of the TV screen.
 
-> صُمم وجُرّب على شاشة Xiaomi (Android 14). المفروض يشتغل على أي شاشة Android TV بنظام 5.0 أو أحدث، والبث المباشر يحتاج Android 11 أو أحدث.
+> Designed and tested on a Xiaomi TV (Android 14). It should work on any Android TV running 5.0 or newer; the live screen view needs Android 11 or newer.
 
 <p align="center">
-  <img src="docs/images/lock-screen.png" width="560" alt="شاشة القفل على التلفزيون"><br>
-  <em>شاشة القفل على التلفزيون</em>
+  <img src="docs/images/lock-screen.png" width="560" alt="Lock screen on the TV"><br>
+  <em>The lock screen on the TV</em>
 </p>
 
 ---
 
-## المحتويات
+## Contents
 
-- [المميزات](#المميزات)
-- [التثبيت السريع (ويندوز)](#التثبيت-السريع-ويندوز)
-- [أول تشغيل](#أول-تشغيل)
-- [طريقة الاستخدام على الشاشة](#طريقة-الاستخدام-على-الشاشة)
-- [لوحة التحكم من الجوال](#لوحة-التحكم-من-الجوال)
-- [إشعارات على الجوال (ntfy)](#إشعارات-على-الجوال-ntfy)
-- [حدود معروفة](#حدود-معروفة)
-- [الأمان والخصوصية](#الأمان-والخصوصية)
-- [بناء التطبيق من الكود](#بناء-التطبيق-من-الكود)
-- [حل المشاكل](#حل-المشاكل)
-- [هيكل المشروع](#هيكل-المشروع)
+- [Features](#features)
+- [Quick install (Windows)](#quick-install-windows)
+- [First run](#first-run)
+- [Using it on the TV](#using-it-on-the-tv)
+- [Phone control panel](#phone-control-panel)
+- [Push notifications (ntfy)](#push-notifications-ntfy)
+- [Known limitations](#known-limitations)
+- [Security and privacy](#security-and-privacy)
+- [Building from source](#building-from-source)
+- [Troubleshooting](#troubleshooting)
+- [Project layout](#project-layout)
 
 ---
 
-## المميزات
+## Features
 
-| الميزة | الشرح |
+| Feature | Description |
 |---|---|
-| 🔒 **قفل برقم سري** | أي تطبيق تختاره يطلب الرقم السري قبل ما يفتح. الرقم يفتح على طول أول ما تكتب آخر رقم صحيح. |
-| ⏳ **مدة الفتح** | بعد الرقم السري تختار: هذي المرة بس (يتقفل أول ما تطلع منه)، ربع ساعة، ساعة، ساعتين، ٣ ساعات، أو مفتوح لين تقفله بنفسك. |
-| 🌙 **وقت النوم** | من ساعة لساعة (مثلاً ٩ م إلى ٧ ص) ينقفل كل شي، حتى التطبيقات اللي كانت مفتوحة. |
-| ⏱ **حد يومي لكل تطبيق** | مثلاً يوتيوب ساعتين باليوم. إذا خلص الوقت يتقفل لين بكرة. |
-| 📊 **سجل الاستخدام** | كم دقيقة انفتح كل تطبيق، لآخر ٧ أيام (يُحسب فقط والشاشة شغالة). |
-| ⚠️ **عد تنازلي على الشاشة** | قبل القفل بـ٥ دقايق وبدقيقة يطلع تنبيه أصفر عشان ما ينقطع على العيال فجأة. |
-| 🔔 **تنبيهات** | لما أحد يكتب الرقم غلط مرتين، أو يحاول يفتح تطبيق مقفل، أو يبدأ وقت النوم. وتوصلك على جوالك حتى والصفحة مسكّرة. |
-| 📱 **لوحة تحكم من الجوال** | كل الإعدادات من جوالك على رابط داخلي، مع **بث مباشر للشاشة** وأزرار تحكم. |
-| 📺 **اسم قناة Live TV** | القنوات المباشرة ما تنصوّر (حماية من الشاشة)، فالتطبيق يقرا اسم القناة ويعرضه لك بدال الصورة. |
-| 🛡️ **حماية من التحايل** | الإعدادات ومتجر Play مقفلة افتراضياً عشان ما يقدر أحد يطفي الخدمة أو يحذف التطبيق. ٥ محاولات غلط توقف الإدخال دقيقة. |
+| 🔒 **PIN lock** | Any app you choose asks for the PIN before it opens. The app opens as soon as the last correct digit is entered. |
+| ⏳ **Unlock duration** | After the PIN, choose: this time only (relocks as soon as you leave the app), 15 minutes, 1, 2 or 3 hours, or until you lock it yourself. |
+| 🌙 **Bedtime** | Between two times (e.g. 9 PM to 7 AM) everything locks, including apps that were already unlocked. |
+| ⏱ **Daily limit per app** | e.g. YouTube 2 hours a day. When the time is used up, the app locks until tomorrow. |
+| 📊 **Usage history** | Minutes per app for the last 7 days (counted only while the screen is on). |
+| ⚠️ **On-screen countdown** | A yellow banner 5 minutes and 1 minute before a lock, so kids aren't cut off without warning. |
+| 🔔 **Alerts** | When someone enters a wrong PIN twice, tries to open a locked app, or bedtime starts. Delivered to your phone even when the panel is closed. |
+| 📱 **Phone control panel** | All settings from your phone on a local link, with a **live view of the TV** and control buttons. |
+| 📺 **Live TV channel name** | Live channels can't be captured (TV hardware protection), so the app reads the channel name and shows it instead. |
+| 🛡️ **Tamper protection** | Settings and the Play Store are locked by default so nobody can switch off the service or uninstall the app. 5 wrong attempts block input for a minute. |
 
 ---
 
-## التثبيت السريع (ويندوز)
+## Quick install (Windows)
 
-### ١. جهّز الشاشة
+### 1. Prepare the TV
 
-1. **الإعدادات ← النظام ← حول** واضغط على **«إصدار نظام التشغيل»** ٧ مرات لين يطلع لك «أنت الآن مطوّر».
-2. **الإعدادات ← النظام ← خيارات المطوّرين** وشغّل **تصحيح الأخطاء عبر USB** و**تصحيح الأخطاء عبر الشبكة** (إذا موجود).
-3. اعرف عنوان الشاشة من **الإعدادات ← الشبكة والإنترنت** (مثل `192.168.0.107`).
+1. **Settings → System → About**, click **"Android TV OS build"** 7 times until you see "You are now a developer".
+2. **Settings → System → Developer options**: turn on **USB debugging** and **Network debugging** (if present).
+3. Find the TV's address under **Settings → Network & Internet** (e.g. `192.168.0.107`).
 
-### ٢. جهّز الكمبيوتر
+### 2. Prepare the computer
 
-- لازم يكون عندك `adb`: إما مثبّت مع Android Studio، أو نزّل [Platform Tools](https://developer.android.com/tools/releases/platform-tools) وفك الضغط في مجلد `windows\adb\`.
+- You need `adb`: either installed with Android Studio, or download [Platform Tools](https://developer.android.com/tools/releases/platform-tools) and unzip it into `windows\adb\`.
 
-### ٣. ثبّت
+### 3. Install
 
-1. نزّل المشروع (زر **Code ← Download ZIP**) وفك الضغط.
-2. افتح `windows\config.bat` بالمفكرة وعدّل `TV_IP` لعنوان شاشتك.
-3. شغّل `windows\1-install.bat` بضغطتين.
-4. أول مرة بتطلع على الشاشة رسالة **«السماح بتصحيح الأخطاء؟»**: اختر **السماح دائماً** ووافق.
+1. Download the project (**Code → Download ZIP**) and unzip it, or grab the APK from [Releases](../../releases).
+2. Open `windows\config.bat` in Notepad and set `TV_IP` to your TV's address.
+3. Double-click `windows\1-install.bat`.
+4. The first time, the TV asks **"Allow USB debugging?"**: choose **Always allow** and confirm.
 
-> **بدون كمبيوتر؟** انقل ملف `dist/TVLock-*.apk` للشاشة بتطبيق مثل **Send Files to TV** وثبّته، وبعدها فعّل الخدمة يدوياً (الخطوة ٢ في أول تشغيل).
+> **No computer?** Copy `dist/TVLock-*.apk` to the TV with an app such as **Send Files to TV**, install it, then enable the service manually (step 2 of First run).
 
-### سكربتات ويندوز
+### Windows scripts
 
-| الملف | وش يسوي |
+| File | What it does |
 |---|---|
-| `1-install.bat` | يثبّت التطبيق ويشغّل خدمة القفل ويفتح التطبيق |
-| `2-update.bat` | يحدّث لنسخة جديدة (يحفظ الإعدادات والرقم السري) |
-| `3-screenshot.bat` | ياخذ لقطة للشاشة ويفتحها |
-| `4-diagnose.bat` | يجمع معلومات التشخيص في `diagnose.txt` |
-| `5-uninstall.bat` | يحذف التطبيق بالكامل |
+| `1-install.bat` | Installs the app, turns on the lock service and opens the app |
+| `2-update.bat` | Updates to a new version (keeps settings and PIN) |
+| `3-screenshot.bat` | Takes a screenshot of the TV and opens it |
+| `4-diagnose.bat` | Collects diagnostic info into `diagnose.txt` |
+| `5-uninstall.bat` | Removes the app completely |
 
 ---
 
-## أول تشغيل
+## First run
 
-1. افتح **«قفل التطبيقات»** من الشاشة واختر رقم سري (٤ إلى ٨ أرقام) واكتبه مرتين.
-2. إذا مكتوب **«⚠️ خدمة القفل مو مفعلة»** اضغط **تفعيل خدمة القفل** وشغّل «قفل التطبيقات» من إعدادات **إمكانية الوصول**. (سكربت التثبيت يسويها لك تلقائياً.)
-3. اختر التطبيقات اللي تبيها مقفلة (🔒 مقفل / 🔓 مفتوح).
-4. خذ الرابط المكتوب تحت **«📱 شوف الشاشة من جوالك»** وافتحه من جوالك.
+1. Open **"قفل التطبيقات" (App Lock)** on the TV, choose a PIN (4 to 8 digits) and enter it twice.
+2. If it says **"⚠️ the lock service is not enabled"**, press **Enable lock service** and turn on "App Lock" in **Accessibility** settings. (The install script does this for you.)
+3. Choose which apps to lock (🔒 locked / 🔓 open).
+4. Note the link shown under **"📱 View the TV from your phone"** and open it on your phone.
 
----
-
-## طريقة الاستخدام على الشاشة
-
-**لما أحد يفتح تطبيق مقفل:** تطلع شاشة القفل. زر الرجوع يرجّعه للرئيسية. اكتب الرقم السري (بأسهم الريموت أو أزرار الأرقام) وبيفتح على طول، وبعدين اختر المدة.
-
-**سبب القفل يظهر تحت اسم التطبيق:**
-- بدون سبب = مقفل بالرقم السري دائماً.
-- 🌙 وقت النوم.
-- ⏱ خلص وقت اليوم.
-
-**إعدادات التطبيق على الشاشة** (تحتاج الرقم السري كل مرة):
-- قائمة التطبيقات المفتوحة الحين وزر «اقفله الحين» لكل وحدة.
-- «اقفل كل التطبيقات الحين».
-- تغيير الرقم السري.
-- تشغيل/إيقاف لوحة الجوال.
+> The TV interface is in Arabic. The phone panel and this guide explain every option.
 
 ---
 
-## لوحة التحكم من الجوال
+## Using it on the TV
 
-افتح من جوالك (وهو على **نفس شبكة البيت**):
+**When someone opens a locked app:** the lock screen appears. Back goes to the home screen. Enter the PIN (remote arrows or number keys) and it opens immediately, then choose a duration.
+
+**The lock reason is shown under the app name:**
+- No reason = always locked with the PIN.
+- 🌙 Bedtime.
+- ⏱ Today's time is used up.
+
+**App settings on the TV** (PIN required every time):
+- Apps currently unlocked, each with a "lock now" button.
+- "Lock all apps now".
+- Change PIN.
+- Turn the phone panel on or off.
+
+---
+
+## Phone control panel
+
+Open on your phone (on the **same home Wi-Fi**):
 
 ```
-http://<عنوان-الشاشة>:8787
+http://<tv-address>:8787
 ```
 
-ادخل بالرقم السري مرة وحدة، والجوال يتذكرك. (إذا غيّرت الرقم السري، كل الجوالات تطلع وتحتاج تدخل من جديد.)
+Sign in with the PIN once and the phone remembers you. (Changing the PIN signs every phone out.)
 
 <p align="center">
   <img src="docs/images/panel-screen.png" width="200">
@@ -123,159 +125,159 @@ http://<عنوان-الشاشة>:8787
   <img src="docs/images/panel-alerts.png" width="200">
 </p>
 
-| التبويب | وش فيه |
+| Tab | Contents |
 |---|---|
-| 📺 **الشاشة** | بث مباشر (صورة كل ثانية تقريباً)، التطبيق المفتوح وكم باقي له، واسم القناة إذا على Live TV. أزرار: اقفل الحالي، اقفل كل شي، الرئيسية، رجوع، إيقاف البث. وإذا طلعت شاشة القفل للعيال: **افتحه ربع ساعة / ساعة / هذي المرة** من جوالك. |
-| 📱 **التطبيقات** | لكل تطبيق: قفل بالرقم، حد يومي (ربع ساعة لين ٤ ساعات)، استهلاك اليوم، وزر افتحه ساعة / اقفله الحين. |
-| 🌙 **النوم** | تشغيل/إيقاف، ساعة البداية والنهاية. |
-| 📊 **الاستخدام** | رسم آخر ٧ أيام. اضغط أي يوم تشوف كل تطبيق كم أخذ. |
-| 🔔 **التنبيهات** | سجل المحاولات وتغيير الرقم والقنوات اللي انشافت، وإعداد إشعارات الجوال. |
-| ⚙️ **الإعدادات** | حالة خدمة القفل، تغيير الرقم السري، تسجيل خروج. |
+| 📺 **Screen** | Live view (about one frame per second), the app in use and its time left, and the channel name on Live TV. Buttons: lock current app, lock everything, home, back, pause stream. When the kids hit the lock screen: **open for 15 min / 1 hour / this time** right from your phone. |
+| 📱 **Apps** | For each app: PIN lock, daily limit (15 min to 4 hours), today's usage, and open for an hour / lock now. |
+| 🌙 **Bedtime** | On/off, start and end time. |
+| 📊 **Usage** | Chart of the last 7 days. Tap a day to see time per app. |
+| 🔔 **Alerts** | Log of attempts, PIN changes and channels watched, plus phone notification setup. |
+| ⚙️ **Settings** | Lock service status, change PIN, sign out. |
 
-> 💡 **نصيحة:** في سفاري أو كروم اختر **«إضافة إلى الشاشة الرئيسية»** عشان تصير اللوحة مثل تطبيق على جوالك.
+> 💡 **Tip:** in Safari or Chrome choose **"Add to Home Screen"** so the panel opens like an app.
 
----
-
-## إشعارات على الجوال (ntfy)
-
-اللوحة تنبهك وهي مفتوحة. عشان توصلك الإشعارات **حتى والصفحة مسكّرة**، التطبيق يستخدم خدمة مجانية مفتوحة المصدر اسمها [ntfy](https://ntfy.sh):
-
-1. نزّل تطبيق **ntfy** من App Store أو Google Play.
-2. في اللوحة: **🔔 التنبيهات** ← شغّل **إشعارات على جوالك** وانسخ الاسم (مثل `tvlock-a1b2c3d4e5`).
-3. في تطبيق ntfy اضغط **+** واشترك بنفس الاسم.
-4. اضغط **إرسال تنبيه تجريبي**.
-
-**وش يوصلك:** رقم سري غلط مرتين، ٥ محاولات غلط، محاولة فتح تطبيق مقفل (مرة كل دقيقتين لنفس التطبيق)، وبداية وقت النوم.
-
-> ⚠️ الرسائل تمر على سيرفر ntfy.sh. الاسم هو اللي يحميها، فلا تشاركه مع أحد. وتقدر تغيّره لأي اسم صعب التخمين.
+> The panel interface is in Arabic.
 
 ---
 
-## حدود معروفة
+## Push notifications (ntfy)
 
-| الحالة | السبب |
+The panel alerts you while it's open. To get notifications **even when the page is closed**, the app uses [ntfy](https://ntfy.sh), a free open-source service:
+
+1. Install the **ntfy** app from the App Store or Google Play.
+2. In the panel: **🔔 Alerts** → turn on **phone notifications** and copy the topic name (e.g. `tvlock-a1b2c3d4e5`).
+3. In ntfy tap **+** and subscribe to the same name.
+4. Tap **send test notification**.
+
+**You'll be notified about:** a wrong PIN twice in a row, 5 wrong attempts, an attempt to open a locked app (at most once every 2 minutes per app), and the start of bedtime.
+
+> ⚠️ Messages pass through the ntfy.sh server. The topic name is what protects them, so don't share it. You can change it to any hard-to-guess name.
+
+---
+
+## Known limitations
+
+| Situation | Why |
 |---|---|
-| **Live TV (القنوات) تطلع سودا في البث** | الشاشة تعرض فيديو القنوات مباشرة بدون ما يمر على أندرويد، فحتى أدوات النظام ما تقدر تصوّره. البديل: التطبيق يعرض **اسم القناة** (يتحدث لما يظهر شريط القناة، يعني مع تغيير القناة أو زر المعلومات). |
-| **نتفلكس وشاهد وديزني وأمثالها** | هالتطبيقات تمنع التصوير عمداً. تشوف اسم التطبيق بس. |
-| **الشاشة في وضع الاستعداد** | ما فيه شي يتصوّر، واللوحة تكتب «الشاشة مطفية». |
-| **بعد إعادة تشغيل الشاشة** | بعض الشاشات توقف خدمات إمكانية الوصول. افتح التطبيق وتأكد إنه مكتوب «✅ خدمة القفل شغالة». |
-| **الطفل الذكي 😄** | يقدر يطفي الخدمة من الإعدادات أو يعيد ضبط المصنع. خلي **الإعدادات** و**متجر Play** مقفلة. وإذا انطفت الخدمة، لوحة الجوال نفسها تتوقف عن الفتح، وهذي علامة إن أحد لعب فيها. |
+| **Live TV shows black in the live view** | The TV renders tuner video directly on a hardware layer that bypasses Android, so even the system's own `adb screencap` can't capture it. Instead the app shows the **channel name** (updated whenever the channel banner appears: when changing channel or pressing Info). |
+| **Netflix, Shahid, Disney+ and similar** | These apps block screenshots on purpose. You see the app name only. |
+| **TV in standby** | There is nothing to capture; the panel says the screen is off. |
+| **After the TV restarts** | Some TVs switch off accessibility services. Open the app and check it says "✅ the lock service is running". |
+| **The clever kid 😄** | They could turn off the service in Settings or factory-reset the TV. Keep **Settings** and the **Play Store** locked. If the service is switched off, the phone panel stops loading, which is your sign someone tampered with it. |
 
 ---
 
-## الأمان والخصوصية
+## Security and privacy
 
-- **كل شي محلي:** اللوحة تشتغل داخل الشاشة على المنفذ `8787` وما تطلع للإنترنت. ما فيه حسابات ولا سيرفرات (إلا ntfy إذا فعّلته أنت).
-- **الرقم السري** محفوظ مشفّر (SHA-256) مو نص صريح.
-- **حماية التخمين:** ٥ محاولات غلط توقف الإدخال دقيقة، على الشاشة وفي اللوحة.
-- **الجلسة** بكوكي `HttpOnly` يتغيّر مع كل تغيير للرقم السري.
-- الاتصال `http` (مو `https`) لأنه داخل شبكة البيت. لا تفتح المنفذ `8787` على الراوتر للإنترنت.
-- صفحات التشخيص `/debug/*` ما تفتح إلا من داخل الشاشة نفسها (عن طريق `adb forward` من كمبيوترك).
+- **Everything is local:** the panel runs inside the TV on port `8787` and never goes to the internet. No accounts, no servers (except ntfy, if you turn it on).
+- **The PIN** is stored hashed (SHA-256), not in plain text.
+- **Brute-force protection:** 5 wrong attempts block input for a minute, on the TV and in the panel.
+- **Session** is an `HttpOnly` cookie that changes whenever the PIN changes.
+- The connection is `http` (not `https`) because it stays inside your home network. Don't forward port `8787` on your router to the internet.
+- The `/debug/*` pages only answer requests from the TV itself (through `adb forward` from your computer).
 
 ---
 
-## بناء التطبيق من الكود
+## Building from source
 
-ما يحتاج Android Studio ولا Gradle. البناء بأدوات خفيفة تنزل تلقائياً (لينكس x86_64، أو **WSL** على ويندوز):
+No Android Studio or Gradle needed. The build uses small tools that are downloaded automatically (Linux x86_64, or **WSL** on Windows):
 
 ```bash
-# المتطلبات: Java 17+ و Python 3 و curl و unzip
+# Requirements: Java 17+, Python 3, curl, unzip
 pip install cryptography
-./scripts/build.sh          # الناتج: dist/TVLock.apk
+./scripts/build.sh          # output: dist/TVLock.apk
 ```
 
-السكربت ينزّل الأدوات أول مرة في `tools/` من:
-[Sable/android-platforms](https://github.com/Sable/android-platforms) (android.jar)،
-[lzhiyong/android-sdk-tools](https://github.com/lzhiyong/android-sdk-tools) (aapt2، zipalign، adb)،
+On first run the script downloads the tools into `tools/` from:
+[Sable/android-platforms](https://github.com/Sable/android-platforms) (android.jar),
+[lzhiyong/android-sdk-tools](https://github.com/lzhiyong/android-sdk-tools) (aapt2, zipalign, adb),
 [pxb1988/dex2jar](https://github.com/pxb1988/dex2jar) (dx).
 
-### مفتاح التوقيع ⚠️
+### Signing key ⚠️
 
-- أول بناء ينشئ مفتاح في `keystore/tvlock.p12` (مستثنى من git).
-- **لا تضيّع المفتاح:** التحديث فوق نسخة مثبتة لازم يكون بنفس المفتاح، وإلا لازم تحذف التطبيق (وتروح الإعدادات) وتثبّت من جديد.
-- تقدر تحدد مفتاحك: `TVLOCK_KEYSTORE=/path/key.p12 TVLOCK_KEYPASS=xxx ./scripts/build.sh`
+- The first build creates a key in `keystore/tvlock.p12` (excluded from git).
+- **Don't lose the key:** an update over an installed copy must use the same key, otherwise you have to uninstall (losing settings) and reinstall.
+- Use your own key with: `TVLOCK_KEYSTORE=/path/key.p12 TVLOCK_KEYPASS=xxx ./scripts/build.sh`
 
-### عشان تغيّر رقم النسخة
+### Changing the version
 
-عدّل `android:versionCode` (رقم يزيد كل مرة) و`android:versionName` في `app/AndroidManifest.xml`.
-
----
-
-## حل المشاكل
-
-<details>
-<summary><b>التطبيقات ما تتقفل</b></summary>
-
-- افتح التطبيق: إذا مكتوب «⚠️ خدمة القفل مو مفعلة» فعّلها، أو شغّل `windows\2-update.bat`.
-- تأكد إن التطبيق مختار 🔒 في القائمة.
-</details>
-
-<details>
-<summary><b>اللوحة ما تفتح من الجوال</b></summary>
-
-- الجوال لازم يكون على نفس شبكة الشاشة (مو بيانات الجوال).
-- اكتب العنوان كامل مع `http://` و`:8787`.
-- تأكد إن «المشاهدة من الجوال» شغالة في إعدادات التطبيق على الشاشة.
-- بعض الراوترات فيها «عزل العملاء» (AP/Client Isolation) يمنع الأجهزة تشوف بعض. طفّه من إعدادات الراوتر.
-</details>
-
-<details>
-<summary><b>البث صورة سودا</b></summary>
-
-- إذا Live TV أو نتفلكس وأمثاله: هذا طبيعي (شوف «حدود معروفة»).
-- غير كذا: شغّل `windows\4-diagnose.bat` وشوف سطر `diag:` في `diagnose.txt`.
-</details>
-
-<details>
-<summary><b>اسم القناة ما يطلع</b></summary>
-
-غيّر القناة أو اضغط زر المعلومات (Info) في الريموت عشان يظهر شريط القناة. إذا ظل ما يطلع، شغّل `4-diagnose.bat`: في `diagnose.txt` تحت `live dump` تلقى النصوص اللي قراها التطبيق من شاشة القنوات. أرسلها في Issue عشان نضبط القراءة لشاشتك.
-</details>
-
-<details>
-<summary><b>نسيت الرقم السري</b></summary>
-
-ما فيه باب خلفي (عشان الأمان). احذف التطبيق بـ `windows\5-uninstall.bat` وثبّته من جديد. لو كانت **الإعدادات** مقفلة، هذا هو الحل الوحيد، وهو يحتاج كمبيوتر وتصحيح الأخطاء شغال.
-</details>
-
-<details>
-<summary><b>«INSTALL_FAILED_UPDATE_INCOMPATIBLE» وقت التحديث</b></summary>
-
-النسخة المثبتة موقعة بمفتاح مختلف. احذف القديمة (`5-uninstall.bat`) وثبّت من جديد، أو ابنِ بنفس المفتاح القديم.
-</details>
+Edit `android:versionCode` (must increase every release) and `android:versionName` in `app/AndroidManifest.xml`.
 
 ---
 
-## هيكل المشروع
+## Troubleshooting
+
+<details>
+<summary><b>Apps don't lock</b></summary>
+
+- Open the app: if it says "⚠️ the lock service is not enabled", enable it, or run `windows\2-update.bat`.
+- Make sure the app is marked 🔒 in the list.
+</details>
+
+<details>
+<summary><b>The panel doesn't open on the phone</b></summary>
+
+- The phone must be on the same network as the TV (not mobile data).
+- Type the full address with `http://` and `:8787`.
+- Make sure "view from phone" is on in the app's settings on the TV.
+- Some routers have "AP/Client Isolation" that stops devices seeing each other. Turn it off in the router settings.
+</details>
+
+<details>
+<summary><b>The live view is black</b></summary>
+
+- On Live TV, Netflix and similar: this is expected (see Known limitations).
+- Otherwise: run `windows\4-diagnose.bat` and check the `diag:` line in `diagnose.txt`.
+</details>
+
+<details>
+<summary><b>The channel name doesn't show</b></summary>
+
+Change channel or press Info on the remote so the channel banner appears. If it still doesn't show, run `4-diagnose.bat`: under `live dump` in `diagnose.txt` you'll find the text the app read from the TV's channel screen. Post it in an Issue so we can tune the reader for your TV.
+</details>
+
+<details>
+<summary><b>I forgot the PIN</b></summary>
+
+There's no back door (for security). Remove the app with `windows\5-uninstall.bat` and reinstall. If **Settings** is locked, this is the only way, and it needs a computer with debugging turned on.
+</details>
+
+<details>
+<summary><b>"INSTALL_FAILED_UPDATE_INCOMPATIBLE" when updating</b></summary>
+
+The installed copy was signed with a different key. Uninstall it (`5-uninstall.bat`) and reinstall, or build with the original key.
+</details>
+
+---
+
+## Project layout
 
 ```
 app/
   AndroidManifest.xml
-  assets/panel.html          لوحة الجوال (صفحة وحدة HTML/JS)
-  res/                       الأيقونات وإعداد خدمة إمكانية الوصول
+  assets/panel.html          phone panel (single HTML/JS page)
+  res/                       icons and the accessibility service config
   src/com/hadi/tvlock/
-    LockService.java         قلب التطبيق: يراقب التطبيق المفتوح، يقفل، يحسب الوقت، يصوّر، يقرا القناة
-    LockActivity.java        شاشة الرقم السري واختيار المدة
-    MainActivity.java        إعدادات التطبيق على الشاشة
-    Rules.java               قواعد القفل: رقم سري / وقت نوم / حد يومي
-    Store.java               حفظ الإعدادات
-    Usage.java               سجل الاستخدام اليومي
-    Events.java              التنبيهات وإرسالها لـ ntfy
-    Apps.java                قائمة التطبيقات وأسماؤها وأيقوناتها
-    WebServer.java           سيرفر اللوحة والـ API
-    Ui.java                  عناصر واجهة مناسبة للريموت
-scripts/                     سكربتات البناء والتوقيع
-windows/                     سكربتات التثبيت والتحديث لويندوز
-dist/                        ملف APK جاهز
-docs/                        الشرح التقني والصور
+    LockService.java         core: watches the foreground app, locks, counts time, captures, reads the channel
+    LockActivity.java        PIN screen and duration picker
+    MainActivity.java        app settings on the TV
+    Rules.java               lock rules: PIN / bedtime / daily limit
+    Store.java               saved settings
+    Usage.java               daily usage log
+    Events.java              alerts and ntfy delivery
+    Apps.java                installed apps, names and icons
+    WebServer.java           panel server and API
+    Ui.java                  remote-friendly UI widgets
+scripts/                     build and signing scripts
+windows/                     install and update scripts for Windows
+dist/                        ready-to-install APK
+docs/                        technical docs and images
 ```
 
-📘 **للمطورين:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (كيف يشتغل من الداخل) و[docs/API.md](docs/API.md) (واجهة اللوحة).
+📘 **For developers:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (how it works inside) and [docs/API.md](docs/API.md) (panel API).
 
 ---
 
-## الرخصة
+## License
 
-[MIT](LICENSE). استخدمه وعدّل عليه بحرية.
-
-</div>
+[MIT](LICENSE). Use it and change it freely.
