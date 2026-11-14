@@ -9,3 +9,5 @@ windows/*.png
 windows/*.jpg
 windows/diagnose.txt
 dist/TVLock.apk
+windows/set-home.txt
+windows/h_*.txt

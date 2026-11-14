@@ -2,9 +2,14 @@
 
 # 🔒 TV App Lock for Google TV
 
-An app for **Android TV / Google TV** that locks apps behind a PIN, limits kids' screen time, and gives you a **full control panel on your phone** over your home Wi-Fi, including a live view of the TV screen.
+An app for **Android TV / Google TV** that locks apps behind a PIN, limits kids' screen time, replaces the cluttered home screen with a **clean, apps-only home screen**, and gives you a **full control panel on your phone** over your home Wi-Fi, including a live view of the TV screen.
 
 > Designed and tested on a Xiaomi TV (Android 14). It should work on any Android TV running 5.0 or newer; the live screen view needs Android 11 or newer.
+
+<p align="center">
+  <img src="docs/images/home-screen.png" width="720" alt="The app's home screen on the TV"><br>
+  <em>The home screen: apps only, no recommendations</em>
+</p>
 
 <p align="center">
   <img src="docs/images/lock-screen.png" width="560" alt="Lock screen on the TV"><br>
@@ -18,6 +23,7 @@ An app for **Android TV / Google TV** that locks apps behind a PIN, limits kids'
 - [Features](#features)
 - [Quick install (Windows)](#quick-install-windows)
 - [First run](#first-run)
+- [Home screen](#home-screen)
 - [Using it on the TV](#using-it-on-the-tv)
 - [Phone control panel](#phone-control-panel)
 - [Push notifications (ntfy)](#push-notifications-ntfy)
@@ -33,6 +39,7 @@ An app for **Android TV / Google TV** that locks apps behind a PIN, limits kids'
 
 | Feature | Description |
 |---|---|
+| 🏠 **Clean home screen** | Apps only, in an Apple TV–like style: no recommendations, no "Continue watching", no ads. Most-used apps first, lock and time-left badges on each app. Follows the device language (Arabic right-to-left, English left-to-right). |
 | 🔒 **PIN lock** | Any app you choose asks for the PIN before it opens. The app opens as soon as the last correct digit is entered. |
 | ⏳ **Unlock duration** | After the PIN, choose: this time only (relocks as soon as you leave the app), 15 minutes, 1, 2 or 3 hours, or until you lock it yourself. |
 | 🌙 **Bedtime** | Between two times (e.g. 9 PM to 7 AM) everything locks, including apps that were already unlocked. |
@@ -75,7 +82,9 @@ An app for **Android TV / Google TV** that locks apps behind a PIN, limits kids'
 | `2-update.bat` | Updates to a new version (keeps settings and PIN) |
 | `3-screenshot.bat` | Takes a screenshot of the TV and opens it |
 | `4-diagnose.bat` | Collects diagnostic info into `diagnose.txt` |
-| `5-uninstall.bat` | Removes the app completely |
+| `5-uninstall.bat` | Restores the original home screen, then removes the app completely |
+| `6-set-home.bat` | Makes the app's home screen the TV's home (rolls back automatically if it fails) |
+| `7-restore-google-home.bat` | Brings back the TV's original home screen |
 
 ---
 
@@ -87,6 +96,29 @@ An app for **Android TV / Google TV** that locks apps behind a PIN, limits kids'
 4. Note the link shown under **"📱 View the TV from your phone"** and open it on your phone.
 
 > The TV interface is in Arabic. The phone panel and this guide explain every option.
+
+---
+
+## Home screen
+
+<p align="center"><img src="docs/images/home-screen.png" width="720" alt="Home screen"></p>
+
+A calm, apps-only home screen in the spirit of Apple TV:
+
+- **Floating side panel:** clock, date, and four buttons with line icons: Home, Live TV, App Lock, Settings. A bedtime card at the bottom shows how long until bedtime (or a red warning if the lock service is off).
+- **Most Used:** the three apps used most this week, as large cards.
+- **All Apps:** full-image tiles with large rounded corners. The focused tile lifts and its name appears below it, like tvOS.
+- **Badges:** a frosted lock on locked apps, and a time-left pill on apps with a daily limit (red when time is up).
+- **Hide apps** you don't want on the home screen (system tools, apps the kids shouldn't see) from the phone panel: **Apps → 👁**.
+- **Language:** follows the TV's language. Arabic is right-to-left; English is left-to-right.
+
+### Turn it on
+
+Run `windows\6-set-home.bat`. It checks that the new home screen starts, makes it the default, and disables the stock launchers (Google TV and, on Xiaomi, Mi Home) plus the Google TV setup wizard, which otherwise keeps claiming the Home button. If the Home button doesn't end up on the new screen, it puts everything back by itself.
+
+### Turn it off
+
+Run `windows\7-restore-google-home.bat`. **Always run it before uninstalling the app**, otherwise the TV is left with no home screen (a black screen). `5-uninstall.bat` does this for you.
 
 ---
 
@@ -128,7 +160,7 @@ Sign in with the PIN once and the phone remembers you. (Changing the PIN signs e
 | Tab | Contents |
 |---|---|
 | 📺 **Screen** | Live view (about one frame per second), the app in use and its time left, and the channel name on Live TV. Buttons: lock current app, lock everything, home, back, pause stream. When the kids hit the lock screen: **open for 15 min / 1 hour / this time** right from your phone. |
-| 📱 **Apps** | For each app: PIN lock, daily limit (15 min to 4 hours), today's usage, and open for an hour / lock now. |
+| 📱 **Apps** | For each app: PIN lock, daily limit (15 min to 4 hours), today's usage, show/hide on the home screen (👁), and open for an hour / lock now. |
 | 🌙 **Bedtime** | On/off, start and end time. |
 | 📊 **Usage** | Chart of the last 7 days. Tap a day to see time per app. |
 | 🔔 **Alerts** | Log of attempts, PIN changes and channels watched, plus phone notification setup. |
@@ -163,6 +195,7 @@ The panel alerts you while it's open. To get notifications **even when the page 
 | **Netflix, Shahid, Disney+ and similar** | These apps block screenshots on purpose. You see the app name only. |
 | **TV in standby** | There is nothing to capture; the panel says the screen is off. |
 | **After the TV restarts** | Some TVs switch off accessibility services. Open the app and check it says "✅ the lock service is running". |
+| **Lock screen and settings language** | The home screen follows the device language; the lock screen, the app settings on the TV and the phone panel are in Arabic. |
 | **The clever kid 😄** | They could turn off the service in Settings or factory-reset the TV. Keep **Settings** and the **Play Store** locked. If the service is switched off, the phone panel stops loading, which is your sign someone tampered with it. |
 
 ---
@@ -256,8 +289,11 @@ The installed copy was signed with a different key. Uninstall it (`5-uninstall.b
 app/
   AndroidManifest.xml
   assets/panel.html          phone panel (single HTML/JS page)
+  assets/fonts/              IBM Plex Sans Arabic (SIL Open Font License)
   res/                       icons and the accessibility service config
   src/com/hadi/tvlock/
+    HomeActivity.java        the home screen (apps only, tvOS-like)
+    IconView.java            line icons drawn in code
     LockService.java         core: watches the foreground app, locks, counts time, captures, reads the channel
     LockActivity.java        PIN screen and duration picker
     MainActivity.java        app settings on the TV
@@ -278,6 +314,20 @@ docs/                        technical docs and images
 
 ---
 
+## What's new
+
+**2.5**
+- New apps-only home screen in an Apple TV–like style, following the device language.
+- Hide any app from the home screen from the phone panel.
+- `6-set-home.bat` / `7-restore-google-home.bat`; `5-uninstall.bat` restores the original home first.
+
+**1.8**
+- First public release: PIN lock, bedtime, daily limits, usage history, alerts, countdown, phone panel with live view, Live TV channel name.
+
+---
+
 ## License
 
 [MIT](LICENSE). Use it and change it freely.
+
+The bundled font [IBM Plex Sans Arabic](https://github.com/IBM/plex) is © IBM Corp. under the [SIL Open Font License](app/assets/fonts/OFL.txt).

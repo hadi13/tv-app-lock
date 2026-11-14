@@ -127,6 +127,12 @@ public class LockService extends AccessibilityService {
             // Our lock screen or settings: the app underneath is not being watched.
             flushUsage();
             trackPkg = null;
+            CharSequence cls = e.getClassName();
+            if (cls != null && cls.toString().endsWith("HomeActivity")) {
+                // Our home screen is in front: the previous app was left.
+                Store.relockOnceExcept(this, pkg);
+                current = pkg;
+            }
             return;
         }
         if (ignorable(pkg)) return;

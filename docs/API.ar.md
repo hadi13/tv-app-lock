@@ -36,7 +36,7 @@
   "lockScreen": true, "lockPkg": "com.netflix.ninja", "lockLabel": "Netflix",
   "lockReason": "⏱ خلص وقت اليوم (ساعتين)",
   "apps": [{"pkg":"...","label":"...","locked":true,"limit":120,"used":95,
-            "open":false,"remain":"","blocked":false}],
+            "open":false,"remain":"","blocked":false,"hidden":false}],
   "bed": {"on":true,"start":1260,"end":420,"active":false},
   "ntfy": {"on":false,"topic":"tvlock-ab12cd34ef"},
   "lastEvent": 12, "serviceOn": true
@@ -48,7 +48,7 @@
 | الطلب | الوصف |
 |---|---|
 | `POST /api/action` `{"a":"..."}` | `lockcurrent`، `lockall`، `home`، `back`، `open15`، `open1`، `openonce` (الثلاثة الأخيرة تفتح التطبيق اللي عليه شاشة القفل الحين). |
-| `POST /api/app` | `{"pkg":"...", "locked":true, "limit":60, "open":60}`. كل حقل اختياري. `open`: دقايق، `-1` مفتوح دائماً، `0` اقفله الحين. |
+| `POST /api/app` | `{"pkg":"...", "locked":true, "limit":60, "hidden":false, "open":60}`. كل حقل اختياري. `open`: دقايق، `-1` مفتوح دائماً، `0` اقفله الحين. |
 | `POST /api/lockset` | `{"all":true}` اقفل الكل بالرقم، أو `{"none":true}` شيل القفل عن الكل. |
 | `POST /api/bed` | `{"on":true,"start":1260,"end":420}` بالدقايق من منتصف الليل. |
 | `POST /api/ntfy` | `{"on":true,"topic":"my-topic","test":true}` |

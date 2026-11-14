@@ -257,6 +257,7 @@ public class WebServer extends Thread {
             if (pkg.isEmpty() || !Rules.lockable(svc, pkg)) { json(o, 400, err("تطبيق غير معروف"), null); return; }
             if (in.has("locked")) Store.setLocked(svc, pkg, in.getBoolean("locked"));
             if (in.has("limit")) Store.setLimit(svc, pkg, in.getInt("limit"));
+            if (in.has("hidden")) Store.setHidden(svc, pkg, in.getBoolean("hidden"));
             if (in.has("open")) {
                 int m = in.getInt("open");
                 if (m == 0) Store.relock(svc, pkg);
@@ -323,7 +324,7 @@ public class WebServer extends Thread {
         String lt = LockActivity.showingTarget;
         JSONObject c = new JSONObject();
         c.put("pkg", cur == null ? "" : cur);
-        c.put("label", cur == null ? "" : Apps.label(svc, cur));
+        c.put("label", cur == null ? "" : cur.equals(svc.getPackageName()) ? "الواجهة الرئيسية" : Apps.label(svc, cur));
         c.put("lockable", Rules.lockable(svc, cur));
         long left = cur == null ? -1 : Rules.timeLeft(svc, cur);
         c.put("left", left < 0 ? "" : Usage.fmt(left + 59999));
@@ -340,6 +341,7 @@ public class WebServer extends Thread {
         o.put("lockReason", lt == null ? "" : Rules.reason(svc, lt));
 
         JSONArray apps = new JSONArray();
+        java.util.Set<String> hidden = Store.hidden(svc);
         for (Apps.Item it : Apps.list(svc)) {
             JSONObject a = new JSONObject();
             a.put("pkg", it.pkg);
@@ -351,6 +353,7 @@ public class WebServer extends Thread {
             a.put("open", u != 0 && Store.isUnlocked(svc, it.pkg));
             a.put("remain", remaining(it.pkg));
             a.put("blocked", Rules.blocked(svc, it.pkg));
+            a.put("hidden", hidden.contains(it.pkg));
             apps.put(a);
         }
         o.put("apps", apps);

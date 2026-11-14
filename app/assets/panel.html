@@ -91,7 +91,7 @@ code{background:#0b1222;padding:2px 6px;border-radius:6px;direction:ltr;display:
   <!-- Apps -->
   <div id="t-apps" hidden>
     <h1>📱 التطبيقات</h1>
-    <p class="mut">🔒 = يطلب الرقم السري دائماً. ⏱ الحد اليومي: إذا خلص وقته يتقفل لحاله لين بكرة.</p>
+    <p class="mut">🔒 = يطلب الرقم السري دائماً. ⏱ الحد اليومي: إذا خلص وقته يتقفل لحاله لين بكرة. 👁 = يظهر في الواجهة الرئيسية.</p>
     <div class="grid"><button class="sec sm" onclick="lockSet('all')">اقفل الكل بالرقم</button><button class="sec sm" onclick="lockSet('none')">شيل القفل عن الكل</button></div>
     <div id="appList"></div>
   </div>
@@ -255,6 +255,7 @@ function renderApps(){
       ${a.limit?`<div class="bar"><i class="${a.used>=a.limit?'over':''}" style="width:${pct}%"></i></div>`:''}
       <div class="row" style="margin-top:10px;flex-wrap:wrap">
         <select onchange="setApp('${a.pkg}',{limit:+this.value})">${LIMITS.map(([v,t])=>`<option value="${v}" ${v==a.limit?'selected':''}>⏱ ${t}</option>`).join('')}</select>
+        <button class="sec sm" onclick="setApp('${a.pkg}',{hidden:${!a.hidden}})">${a.hidden?'🙈 مخفي من الواجهة':'👁 ظاهر في الواجهة'}</button>
         <span class="grow"></span>
         ${a.open?`<button class="bad sm" onclick="setApp('${a.pkg}',{open:0})">اقفله الحين</button>`:`<button class="sec sm" onclick="setApp('${a.pkg}',{open:60})">افتحه ساعة</button>`}
       </div></div>`}).join('');

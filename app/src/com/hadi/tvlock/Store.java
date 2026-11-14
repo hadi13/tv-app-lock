@@ -123,6 +123,16 @@ public final class Store {
         if (e != null) e.commit();
     }
 
+    // ---------- Apps hidden from the home screen ----------
+    public static Set<String> hidden(Context c) {
+        return new HashSet<String>(p(c).getStringSet("hidden", new HashSet<String>()));
+    }
+    public static void setHidden(Context c, String pkg, boolean hide) {
+        Set<String> s = hidden(c);
+        if (hide) s.add(pkg); else s.remove(pkg);
+        p(c).edit().putStringSet("hidden", s).commit();
+    }
+
     // ---------- Daily limit (minutes; 0 = none) ----------
     public static int limit(Context c, String pkg) { return p(c).getInt("limit_" + pkg, 0); }
     public static void setLimit(Context c, String pkg, int min) {

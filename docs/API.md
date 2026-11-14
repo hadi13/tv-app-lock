@@ -34,7 +34,7 @@ Everything below needs the cookie, otherwise `401`.
   "lockScreen": true, "lockPkg": "com.netflix.ninja", "lockLabel": "Netflix",
   "lockReason": "⏱ خلص وقت اليوم (ساعتين)",
   "apps": [{"pkg":"...","label":"...","locked":true,"limit":120,"used":95,
-            "open":false,"remain":"","blocked":false}],
+            "open":false,"remain":"","blocked":false,"hidden":false}],
   "bed": {"on":true,"start":1260,"end":420,"active":false},
   "ntfy": {"on":false,"topic":"tvlock-ab12cd34ef"},
   "lastEvent": 12, "serviceOn": true
@@ -48,7 +48,7 @@ Human-readable strings (`remain`, `left`, `lockReason`) are in Arabic.
 | Request | Description |
 |---|---|
 | `POST /api/action` `{"a":"..."}` | `lockcurrent`, `lockall`, `home`, `back`, `open15`, `open1`, `openonce` (the last three open the app currently on the lock screen). |
-| `POST /api/app` | `{"pkg":"...", "locked":true, "limit":60, "open":60}`, every field optional. `open`: minutes, `-1` always open, `0` lock now. |
+| `POST /api/app` | `{"pkg":"...", "locked":true, "limit":60, "hidden":false, "open":60}`, every field optional. `open`: minutes, `-1` always open, `0` lock now. |
 | `POST /api/lockset` | `{"all":true}` PIN-lock everything, or `{"none":true}` remove all PIN locks. |
 | `POST /api/bed` | `{"on":true,"start":1260,"end":420}` minutes after midnight. |
 | `POST /api/ntfy` | `{"on":true,"topic":"my-topic","test":true}` |

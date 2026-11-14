@@ -50,6 +50,16 @@ The app needs no root and no Device Owner. Everything is built on an **Accessibi
 - `countdown()`: `Rules.timeLeft` = the nearest of (unlock end, remaining daily limit, bedtime start). At 5 minutes and 1 minute a yellow banner shows for 15 seconds.
 - Log the channel if it stayed the same for a minute.
 
+## Home screen (`HomeActivity`)
+
+An activity with `MAIN` + `HOME` + `DEFAULT`. `windows/6-set-home.bat` makes it the default with `cmd package set-home-activity` and disables the stock launchers and the Google TV setup wizard (`com.google.android.tungsten.setupwraith`), which claims Home with a higher priority than any third-party launcher. `7-restore-google-home.bat` re-enables them.
+
+- Language and direction come from `Locale.getDefault()`: Arabic text and RTL, or English and LTR.
+- "Most used" = the top 3 apps by watch time over 7 days (at least 1 minute); the rest go in a 5-column grid. Apps in `Store.hidden` are left out.
+- Tiles use the app's TV banner (`getApplicationBanner` / `getActivityBanner`) with `CENTER_CROP`; without one, the icon sits on a dark tint computed from the icon's own colors.
+- Focus: scale + elevation + the name fading in under the tile. Parents have `clipChildren`/`clipToPadding` off so a lifted tile is never cut.
+- When our home is in front, `LockService` sets `current` to our package (detected by the event's class name) so a previous blocked app isn't shown again, and "this time only" unlocks are relocked.
+
 ## Usage log
 
 `SharedPreferences` named `tvlock_usage`, keys `yyyyMMdd|package` → milliseconds. Entries older than 14 days are removed. Screen off (`ACTION_SCREEN_OFF`) pauses counting.
@@ -88,6 +98,7 @@ The raw text is available at `/debug/info` (`live dump`) so the reader can be tu
 | `bed_on/bed_start/bed_end` | Bedtime (minutes after midnight) |
 | `web_on` / `web_token` | Phone panel and session token (renewed when the PIN changes) |
 | `ntfy_on` / `ntfy_topic` | ntfy notifications |
+| `hidden` | Packages hidden from the home screen |
 
 ## Why `targetSdkVersion 29`?
 
